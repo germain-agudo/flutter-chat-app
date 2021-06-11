@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-import 'package:chat/models/usuarios.dart';
+import 'package:chat/models/usuario.dart';
+import 'package:chat/services/auth_service.dart';
 
 class UsuariosPage extends StatefulWidget {
   @override
@@ -16,19 +18,21 @@ class _UsuariosPageState extends State<UsuariosPage> {
 
   //Lista
   final usuarios = [
-    Usuarios(uid: '1', nombre: 'María', email: 'test1@test.com', online: true),
-    Usuarios(
+    Usuario(uid: '1', nombre: 'María', email: 'test1@test.com', online: true),
+    Usuario(
         uid: '2', nombre: 'Melissa', email: 'test2@test.com', online: false),
-    Usuarios(
-        uid: '3', nombre: 'Germain', email: 'test3@test.com', online: true),
+    Usuario(uid: '3', nombre: 'Germain', email: 'test3@test.com', online: true),
   ];
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
+    final usuario = authService.usuario;
+
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            'Mi Nombre',
+            usuario.nombre,
             style: TextStyle(color: Colors.black87),
           ),
           elevation: 1,
@@ -38,7 +42,11 @@ class _UsuariosPageState extends State<UsuariosPage> {
                 Icons.exit_to_app_sharp,
                 color: Colors.black87,
               ), //
-              onPressed: () {}),
+              onPressed: () {
+                //TODO: desconectarnos del socketSErver
+                Navigator.pushReplacementNamed(context, 'login');
+                AuthService.deleteToken();
+              }),
           //
           actions: <Widget>[
             Container(
@@ -84,7 +92,7 @@ class _UsuariosPageState extends State<UsuariosPage> {
   }
 
 //El contenido de mi Listview
-  ListTile _usuarioListTile(Usuarios usuario) {
+  ListTile _usuarioListTile(Usuario usuario) {
     return ListTile(
       //va a mostrar los usuarios
       title: Text(usuario.nombre),

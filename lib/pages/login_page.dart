@@ -1,6 +1,11 @@
 // import 'dart:ui';
 import 'package:chat/widgets/boton_azul.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:chat/services/auth_service.dart';
+
+import 'package:chat/helpers/mostrar_alerta.dart';
 
 import 'package:chat/widgets/labels.dart';
 import 'package:chat/widgets/logo.dart';
@@ -84,6 +89,10 @@ class __FormState extends State<_Form> {
 
   @override
   Widget build(BuildContext context) {
+//el listen en false para que provider no intente redibujar el widget y yo no necesito
+//
+    final authService = Provider.of<AuthService>(context, listen: true);
+
     return Container(
       margin: EdgeInsets.only(top: 40), //Margen o espacio hacia abajo
       padding: EdgeInsets.symmetric(
@@ -111,11 +120,28 @@ class __FormState extends State<_Form> {
           // Todo: Crear boton
           BotonAzul(
             //
+            color: (authService.autenticando) ? Colors.blueGrey : Colors.blue,
             text: 'Ingrese',
-            onPressed: () {
-              print(emailCtrl.text);
-              print(passCtrl.text);
-            },
+            onPressed: (authService.autenticando)
+                ? null
+                : () async {
+// el listen en false para que provider no intente redibujar el widget y yo no necesito
+// final authService = Provider.of<AuthService>(context, listen: true);
+                    // print(emailCtrl.text);
+                    // print(passCtrl.text);
+                    FocusScope.of(context)
+                        .unfocus(); // va a quitar el focus es decir el tecado
+                    final loginOk = await authService.login(
+                        emailCtrl.text.trim(), passCtrl.text.trim());
+                    if (loginOk) {
+                      //tODO:Navegar a otra pantalla
+                      Navigator.pushReplacementNamed(context, 'usuarios');
+                    } else {
+                      //Mostrar Alerta
+                      mostrarAlerta(context, 'Login incorrecto',
+                          'Revise sus credenciales nuevamente');
+                    }
+                  },
           )
         ],
       ),

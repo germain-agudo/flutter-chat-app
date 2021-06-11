@@ -6,19 +6,20 @@ class BotonAzul extends StatelessWidget {
   //Variables que voy a utilozar
   final String text;
   final Function onPressed;
+  final Color color;
 //El constructor de mis variables
-  const BotonAzul(
-      {Key key, //
-      @required this.text, //
-      @required this.onPressed //
-      })
-      : super(key: key);
+  const BotonAzul({
+    Key key, //
+    @required this.text, //
+    @required this.onPressed, //
+    this.color = Colors.blue,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+        backgroundColor: MaterialStateProperty.all<Color>(color),
 // shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0), ), ),//Este ya trai
         shape: MaterialStateProperty.all<StadiumBorder>(StadiumBorder()),
         // elevation: MaterialStateProperty.all(0.0) // este traia
