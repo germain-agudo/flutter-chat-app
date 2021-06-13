@@ -1,5 +1,6 @@
 // import 'dart:ui';
 import 'package:chat/helpers/mostrar_alerta.dart';
+import 'package:chat/services/socket_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -90,6 +91,8 @@ class __FormState extends State<_Form> {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
+    final socketService = Provider.of<SocketService>(context);
+
     return Container(
       margin: EdgeInsets.only(top: 40), //Margen o espacio hacia abajo
       padding: EdgeInsets.symmetric(
@@ -137,7 +140,7 @@ class __FormState extends State<_Form> {
                         emailCtrl.text.trim(),
                         passCtrl.text.trim());
                     if (registroOk == true) {
-                      //TODO: Conectar con el socketServer
+                      socketService.connect();
                       Navigator.pushReplacementNamed(context, 'usuarios');
                     } else {
                       mostrarAlerta(context, 'registro incorrecto', registroOk);

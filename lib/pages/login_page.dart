@@ -1,4 +1,5 @@
 // import 'dart:ui';
+import 'package:chat/services/socket_service.dart';
 import 'package:chat/widgets/boton_azul.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -92,6 +93,7 @@ class __FormState extends State<_Form> {
 //el listen en false para que provider no intente redibujar el widget y yo no necesito
 //
     final authService = Provider.of<AuthService>(context, listen: true);
+    final socketService = Provider.of<SocketService>(context);
 
     return Container(
       margin: EdgeInsets.only(top: 40), //Margen o espacio hacia abajo
@@ -117,7 +119,7 @@ class __FormState extends State<_Form> {
             isPassword: true,
           ),
 
-          // Todo: Crear boton
+          // TODO: Crear boton
           BotonAzul(
             //
             color: (authService.autenticando) ? Colors.blueGrey : Colors.blue,
@@ -134,7 +136,8 @@ class __FormState extends State<_Form> {
                     final loginOk = await authService.login(
                         emailCtrl.text.trim(), passCtrl.text.trim());
                     if (loginOk) {
-                      //tODO:Navegar a otra pantalla
+                      //TODO:Navegar a otra pantalla
+                      socketService.connect();
                       Navigator.pushReplacementNamed(context, 'usuarios');
                     } else {
                       //Mostrar Alerta
